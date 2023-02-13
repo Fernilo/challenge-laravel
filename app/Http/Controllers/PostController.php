@@ -15,7 +15,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+       
+        return view('post.index', compact('posts'));
     }
 
     /**
@@ -47,6 +49,8 @@ class PostController extends Controller
         $post->descripcion = $request->descripcion;
 
         $post->save();
+
+        return redirect()->route('post.index')->with('mensaje' , "Ok");
     }
 
     /**

@@ -11,7 +11,9 @@
     <title>Challenge</title>
   </head>
   <body>
-    @yield('principal')
+    <div class="container">
+      @yield('principal')
+    </div>
 
     <!-- Optional JavaScript; choose one of the two! -->
 
