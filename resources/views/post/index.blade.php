@@ -3,23 +3,35 @@
 @section('principal')
     <h1>Listado de posts</h1>
     <a class="btn btn-success mb-3" href="{{route('post.create')}}">Nuevo Posts</a class="btn btn-primary">
-        @isset($mensaje)
-            <p>{{$mensaje}}</p>
-        @endisset($mensaje)
+    @if(session('mensaje'))
+        <div class="alert-success p-3 mb-3">
+            <p>{{session('mensaje')}}</p>
+        </div>
+    @endif
     
-    <div class="row">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach ($posts as $post)
-        <div class="col-md-3 mb-3">
-            <div class="card" style="width: 100%">    
+        <div class="col">
+            <div class="card h-100">    
                 <img class="card-img-top img-fluid" src="{{Storage::url($post->imagen)}}" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">{{$post->nombre}}</h5>
+                    <h5 class="card-title">{{$post->titulo}}</h5>
                     <p class="card-text">{{ $post->descripcion }}</p>
-                    <a href="#" class="btn btn-primary">Editar</a>
-                    <a href="#" class="btn btn-danger">Eliminar</a>
+                    <a href="{{ route('post.edit',[$post->id]) }}" class="btn btn-primary">Editar</a>
+                    <a id="boton-eliminar" class="btn btn-danger">Eliminar</a>
+                    <form action="/post/{{$post->id}}" method="post">
+                    @method('delete')
+                    @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                    </form>
                 </div>
             </div>
         </div>
         @endforeach
+    </div>
+    <div class="position-relative mt-5">
+        <div class="position-absolute top-50 start-50 translate-middle">
+            {{ $posts->links() }}
+        </div>
     </div>
 @endsection

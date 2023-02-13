@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::paginate(4);
        
         return view('post.index', compact('posts'));
     }
@@ -50,7 +50,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('post.index')->with('mensaje' , "Ok");
+        return redirect()->route('post.index')->with(['mensaje' => "Post Creado Correctamente"]);
     }
 
     /**
@@ -72,7 +72,9 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        //dd($id);
+        $post = Post::find($id);
+        return view('post.edit',['post' => $post]);
     }
 
     /**
@@ -84,7 +86,18 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        if($request->file('imagen')) {
+            $post->imagen= Storage::put('public/posts',$request->file('imagen'));
+        } 
+
+        $post->titulo = $request->titulo;
+        $post->descripcion = $request->descripcion;
+        
+        $post->save();
+
+        return redirect()->route('post.index')->with(['mensaje' => 'El Post se editó correctamente']);
+      
     }
 
     /**
@@ -95,6 +108,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        dd($id);
+        Post::destroy($id);
+
+        return redirect()->route('post.index')->with(['mensaje' => 'El Post se eliminó correctamente']);
     }
 }
