@@ -22,4 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/posts' , [ApiController::class , 'index']);
 Route::post('/posts' , [ApiController::class , 'store']);
 Route::post('/posts/{id}' , [ApiController::class , 'update']);
-Route::delete('/post/{id}' , [ApiController::class , 'destroy']);
+Route::delete('/posts/{id}' , [ApiController::class , 'destroy']);

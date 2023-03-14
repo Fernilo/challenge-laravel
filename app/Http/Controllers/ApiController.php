@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {
@@ -16,21 +17,34 @@ class ApiController extends Controller
 
     public function store(Request $request) 
     {
-        dd($request->email);
-    }
+        $url = 'default.png';
+        if($request->file('imagen')) {
+            $url = Storage::put('public/posts',$request->file('imagen'));
+        }
+        $post = new Post;
 
-    public function update(Request $request) 
-    {
-        $post = Post::find($request->id);
+        $post->imagen = $url;
+        $post->titulo = $request->titulo;
+        $post->descripcion = $request->descripcion;
 
         $post->save();
-
-        return response()->json($post);
-        dd($request->email);
     }
 
-    public function destroy (Request $request) 
+    public function update(Request $request , $id) 
     {
-        $post = Post::destroy($request->id);
+        $post = Post::find($id);
+        if($request->file('imagen')) {
+            $post->imagen= Storage::put('public/posts',$request->file('imagen'));
+        } 
+
+        $post->titulo = $request->titulo;
+        $post->descripcion = $request->descripcion;
+        
+        $post->save();
+    }
+
+    public function destroy ($id) 
+    {
+        $post = Post::destroy($id);
     }
 }
