@@ -1,12 +1,7 @@
 require('./bootstrap');
 
-let element = document.getElementsByClassName("boton-eliminar");
+import Alpine from 'alpinejs';
 
-for(let i = 0; i < element.length; i++) {
-    element[i].addEventListener("click", function() {
-        let resultado = confirm("Ok?")
-        if(resultado) {
-            document.getElementById("form-"+i).submit();
-        }
-    })
-}
+window.Alpine = Alpine;
+
+Alpine.start();
