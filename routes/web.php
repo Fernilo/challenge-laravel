@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +20,8 @@ Route::get('/', function () {
 });
 
 Route::resource('post' , PostController::class)->middleware(['auth']);
+Route::get('contacto' , [ContactoController::class,'index'])->middleware(['auth'])->name('contacto.index');
+Route::post('contacto' , [ContactoController::class,'send'])->middleware(['auth'])->name('contacto.send');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
