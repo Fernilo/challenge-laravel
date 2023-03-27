@@ -13,11 +13,16 @@ class ContactoController extends Controller
         return view('contacto.index');
     }
 
-    public function send() 
+    public function send(Request $request) 
     {
-        $correo = new ContactoMailable;
+        $request->validate([
+            'nombre' => 'required',
+            'correo' => 'required|email',
+            'mensaje' => 'required'
+        ]);
+        $correo = new ContactoMailable($request->all());
         Mail::to('fernan.alemercado@gmail.com')->send($correo);
     
-        return "Mensaje Enviado";
+        return redirect()->route('contacto.index')->with('info' , 'Mensaje enviado');
     }
 }
