@@ -7,6 +7,9 @@
         <div class="mb-3">
             <label for="titulo" class="form-label">Título</label>
             <input type="text" name="titulo" class="form-control">
+            @error('titulo')
+                <small class="text-danger">{{$message}}</small>
+            @enderror
         </div>
         <div class="mb-3">
             <label for="imagen" class="form-label">Imagen</label>
@@ -15,6 +18,9 @@
         <div class="mb-3">
             <label for="descripcion" class="form-label">Descripcon</label>
             <textarea class="form-control" name="descripcion"></textarea>
+            @error('descripcion')
+                <small class="text-danger">{{$message}}</small>
+            @enderror
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
