@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Exceptions\PostNotFoundException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 
 class PostApiController extends Controller
 {
@@ -14,7 +17,7 @@ class PostApiController extends Controller
      * 
      * @return json
      */
-    public function create(PostlApiRequest $request){
+    public function create(PostApiRequest $request){
         try{
             $data = $request->validated();
             Post::create($data);
@@ -31,9 +34,9 @@ class PostApiController extends Controller
     }
 
     /**
-     * Deletes a travel
+     * Deletes a post
      * 
-     * @param int  $id         Travel ID
+     * @param int  $id         post ID
      * @param bool $hardDelete Flag to indicate if must be hard deleted or not
      * 
      * @return bool
@@ -61,18 +64,18 @@ class PostApiController extends Controller
                 $Post,
                 200
             );
-        }catch(TravelNotFoundException $e){
+        }catch(PostNotFoundException $e){
             return response()->json(
-                ["message" => "Sorry! We couldn't find the travel you're looking for."],
+                ["message" => "Sorry! We couldn't find the post you're looking for."],
                 404
             );
         }
     }
 
     /**
-     * Updates a travel
+     * Updates a post
      * 
-     * @param int $id Travel ID
+     * @param int $id post ID
      * 
      * @return bool
      */
@@ -83,7 +86,7 @@ class PostApiController extends Controller
 
 
     /**
-     * Lists all travels
+     * Lists all posts
      * 
      * @param Request $request Request object
      * 
@@ -92,15 +95,15 @@ class PostApiController extends Controller
     public function list(Request $request)
     {
         try{
-            $travels = TravelApi::list(true, 100, $request->page);
-            if($travels === false){
-                throw new TravelNotFoundException("Sorry! There are no travels registered yet.");
+            $posts = postApi::list(true, 100, $request->page);
+            if($posts === false){
+                throw new PostNotFoundException("Sorry! There are no posts registered yet.");
             }
             return response()->json(
-                $travels,
+                $posts,
                 200
             );
-        }catch(TravelNotFoundException $e){
+        }catch(PostNotFoundException $e){
             return response()->json(
                 ["message" => $e->getMessage()],
                 404
