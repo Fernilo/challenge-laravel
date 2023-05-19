@@ -26,32 +26,32 @@ class Post extends Model
      * @return bool
      */
 
-    public function create(array $data)
-    {
-        try {
-            $newPost = Post::create($data);
+    // public function create(array $data)
+    // {
+    //     try {
+    //         $newPost = Post::create($data);
 
-            // Save the images in the storage and gets the filenames
-            list($imgHoldAfterDischarge, $imgHoldBeforeDischarge) = $this->savePostImages(
-                $newPost->id,
-                [
-                    'after' => $request->file('image_hold_after_discharge'),
-                    'before' => $request->file('image_hold_before_discharge')
-                ]
-            );
+    //         // Save the images in the storage and gets the filenames
+    //         list($imgHoldAfterDischarge, $imgHoldBeforeDischarge) = $this->savePostImages(
+    //             $newPost->id,
+    //             [
+    //                 'after' => $request->file('image_hold_after_discharge'),
+    //                 'before' => $request->file('image_hold_before_discharge')
+    //             ]
+    //         );
 
-            // Updates the Post with the saved filenames into the storage.
-            $newPost->image_hold_before_discharge = $imgHoldBeforeDischarge;
-            $newPost->image_hold_after_discharge = $imgHoldAfterDischarge;
-            $newPost->save();
-            return true;
+    //         // Updates the Post with the saved filenames into the storage.
+    //         $newPost->image_hold_before_discharge = $imgHoldBeforeDischarge;
+    //         $newPost->image_hold_after_discharge = $imgHoldAfterDischarge;
+    //         $newPost->save();
+    //         return true;
 
-        } catch (\Throwable $th) {
-            //throw $th;
+    //     } catch (\Throwable $th) {
+    //         //throw $th;
 
-            return false;
-        }
-    }
+    //         return false;
+    //     }
+    // }
 
      /**
      * Save post's images into the storage
@@ -63,15 +63,15 @@ class Post extends Model
      * 
      * @return array<int, string> An array with the filename of each image stored.
      */
-    public function savePostImages(int $postlId, array $images){
-        $filenames = [];
-        foreach($images as $key => $image){
-            $fileName = srpintf( "%s.%s", Str::random(40), $image->clientExtension());
+    // public function savePostImages(int $postlId, array $images){
+    //     $filenames = [];
+    //     foreach($images as $key => $image){
+    //         $fileName = srpintf( "%s.%s", Str::random(40), $image->clientExtension());
             
-            $filenames[$key] = $image->store("images/post/$postlId/$fileName");
-        }
-        return $filenames;
-    }
+    //         $filenames[$key] = $image->store("images/post/$postlId/$fileName");
+    //     }
+    //     return $filenames;
+    // }
 
 
     /**
@@ -83,13 +83,13 @@ class Post extends Model
      * 
      * @return Post
      */
-    public function read(int $id){
-        try{
-            return Post::findOrFail($id)->toArray();
-        }catch(\Exception $e){
-            throw new PostNotFoundException("Post not found");
-        }
-    }
+    // public function read(int $id){
+    //     try{
+    //         return Post::findOrFail($id)->toArray();
+    //     }catch(\Exception $e){
+    //         throw new PostNotFoundException("Post not found");
+    //     }
+    // }
 
     /**
      * Lists all posts
@@ -99,9 +99,9 @@ class Post extends Model
      * 
      * @return Post[]
      */
-    public function list(bool $paginate = true, int $rowsPerPage = 100)
-    {
-        return (($paginate === true)?Post::paginate($rowsPerPage):Post::all());
-    }
+    // public function list(bool $paginate = true, int $rowsPerPage = 100)
+    // {
+    //     return (($paginate === true)?Post::paginate($rowsPerPage):Post::all());
+    // }
 
 }
