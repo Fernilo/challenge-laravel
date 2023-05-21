@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Exceptions\PostNotFoundException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Models\PostApi;
+use App\Http\Requests\PostApiRequest;
 
 
 class PostApiController extends Controller
@@ -18,21 +19,21 @@ class PostApiController extends Controller
      * 
      * @return json
      */
-    // public function create(PostApiRequest $request){
-    //     try{
-    //         $data = $request->validated();
-    //         Post::create($data);
-    //         return response()->json(
-    //             ["message" => "Success! The post was registered."],
-    //             201
-    //         );
-    //     }catch(\HttpRequestException $e){
-    //         return response()->json(
-    //             ["message" => "Sorry! The post couldn't be registered."],
-    //             400
-    //         );
-    //     }
-    // }
+    public function create(PostApiRequest $request){
+        try{
+            $data = $request->validated();
+            PostApi::create($data);
+            return response()->json(
+                ["message" => "Success! The post was registered."],
+                201
+            );
+        }catch(\HttpRequestException $e){
+            return response()->json(
+                ["message" => "Sorry! The post couldn't be registered."],
+                400
+            );
+        }
+    }
 
     /**
      * Deletes a post
@@ -58,20 +59,20 @@ class PostApiController extends Controller
      * @return json JSON response with post's data
      */
 
-    // public function read(Request $request, int $id){
-    //     try{
-    //         $Post = PostApi::read($id);
-    //         return response()->json(
-    //             $Post,
-    //             200
-    //         );
-    //     }catch(PostNotFoundException $e){
-    //         return response()->json(
-    //             ["message" => "Sorry! We couldn't find the post you're looking for."],
-    //             404
-    //         );
-    //     }
-    // }
+    public function read(Request $request, int $id){
+        try{
+            $Post = PostApi::read($id);
+            return response()->json(
+                $Post,
+                200
+            );
+        }catch(PostNotFoundException $e){
+            return response()->json(
+                ["message" => "Sorry! We couldn't find the post you're looking for."],
+                404
+            );
+        }
+    }
 
     /**
      * Updates a post

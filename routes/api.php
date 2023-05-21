@@ -19,8 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/' , [PostApiController::class , 'list'])->name('posts.list');
-Route::post('/' , [PostApiController::class , 'create'])->name('posts.create');
-Route::patch('/{id}' , [PostApiController::class , 'update'])->name('posts.update');
-Route::delete('/{id}' , [PostApiController::class , 'delete'])->name('posts.delete');
-Route::get('/{id}' , [PostApiController::class , 'read'])->name('posts.read');
+Route::middleware('cors')->prefix('post')->group(function () {
+    Route::get('/' , [PostApiController::class , 'list'])->name('posts.list');
+    Route::post('/' , [PostApiController::class , 'create'])->name('posts.create');
+    Route::patch('/{id}' , [PostApiController::class , 'update'])->name('posts.update');
+    Route::delete('/{id}' , [PostApiController::class , 'delete'])->name('posts.delete');
+    Route::get('/{id}' , [PostApiController::class , 'read'])->name('posts.read');
+});
