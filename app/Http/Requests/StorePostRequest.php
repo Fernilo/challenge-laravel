@@ -24,8 +24,8 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'titulo' => 'required|unique:posts',
-            'descripcion' => 'required'
+            'titulo' => 'required',
+            // 'descripcion' => 'required'
         ];
     }
 
@@ -33,7 +33,7 @@ class StorePostRequest extends FormRequest
     {
         return [
             'titulo.required' => 'El :attribute es obligatorio',
-            'titulo.unique' => 'El :attribute ya está creado',
+            // 'titulo.unique' => 'El :attribute ya está creado',
             'descripcion.required' => 'La :attribute es obligatorio'
         ];
     }

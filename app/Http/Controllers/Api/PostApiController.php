@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Exceptions\PostNotFoundException;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use App\Models\PostApi;
-use App\Http\Requests\PostApiRequest;
-
+use App\Models\Post;
+use App\Http\Requests\StorePostRequest;
+use Exception;
+use Illuminate\Support\Str;
 
 class PostApiController extends Controller
 {
@@ -19,20 +19,32 @@ class PostApiController extends Controller
      * 
      * @return json
      */
-    public function create(PostApiRequest $request){
+    public function create(StorePostRequest $request){
         try{
-            $data = $request->validated();
-            PostApi::create($data);
+            $post = Post::create($request->all());
+
+            // Updates the post with the saved filenames into the storage.
+            $post->imagen = $this->savePostImages($post->id,$request);
+            $post->save();
             return response()->json(
                 ["message" => "Success! The post was registered."],
                 201
             );
-        }catch(\HttpRequestException $e){
+        }catch(Exception $e){
             return response()->json(
-                ["message" => "Sorry! The post couldn't be registered."],
-                400
+                ["message" => $e->getMessage()],
+                404
             );
         }
+    }
+
+    private function savePostImages(int $postId, Request $image)
+    {
+        $fileName = sprintf( "%s.%s", Str::random(40), $image->file('imagen')->clientExtension());
+           
+        $image->file('imagen')->store("images/posts/$postId/$fileName");
+        
+        return $fileName;
     }
 
     /**
@@ -43,10 +55,21 @@ class PostApiController extends Controller
      * 
      * @return bool
      */
-    public function delete(int $id, bool $hardDelete = false)
+    public function delete(int $id)
     {
-        // @todo Complete me!!
-        return false;
+        try{
+            $post = Post::findOrFail($id);
+            $post->delete();
+            return response()->json(
+                ['message' => 'Success! The post was deleted.'],
+                200
+            );
+        }catch(Exception $e){
+            return response()->json(
+                ["message" => $e->getMessage()],
+                404
+            );
+        }
     }
 
 
@@ -59,11 +82,11 @@ class PostApiController extends Controller
      * @return json JSON response with post's data
      */
 
-    public function read(Request $request, int $id){
+    public function read(int $id){
         try{
-            $Post = PostApi::read($id);
+            $post = Post::findOrFail($id)->toArray();
             return response()->json(
-                $Post,
+                $post,
                 200
             );
         }catch(PostNotFoundException $e){
@@ -81,23 +104,40 @@ class PostApiController extends Controller
      * 
      * @return bool
      */
-    public function update(){
-        // @todo Complete me!!
-        return false;
+    public function update(StorePostRequest $request , int $id){
+        dd($request);
+        try{
+            // $post = Post::findOrFail($id)->toArray();
+            // dd($post);
+            // $post->update($request->all());
+
+            // if($request->file('imagen')) {
+            //     $post->imagen = $this->savePostImages($post->id,$request);
+            //     $post->save();
+            // }
+
+            return response()->json(
+                ["message" => "Success! The post was updated."],
+                201
+            );
+        }catch(Exception $e){
+            return response()->json(
+                ["message" => $e->getMessage()],
+                404
+            );
+        }
     }
 
 
     /**
      * Lists all posts
      * 
-     * @param Request $request Request object
-     * 
      * @return json
      */
-    public function list(Request $request)
+    public function list($paginate = true , $rowsPerPage = 5)
     {
         try{
-            $posts = PostApi::list(true, 5, $request->page);
+            $posts = (($paginate === true)?Post::paginate($rowsPerPage):Post::all());
         
             if($posts === false){
                 throw new PostNotFoundException("Sorry! There are no posts registered yet.");
@@ -106,7 +146,7 @@ class PostApiController extends Controller
                 $posts,
                 200
             );
-        }catch(PostNotFoundException $e){
+        }catch(Exception $e){
             return response()->json(
                 ["message" => $e->getMessage()],
                 404

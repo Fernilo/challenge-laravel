@@ -25,21 +25,22 @@ class PostApi
      */
     public function create(array $data){
         try{
-            $newTravel = Post::create($data);
+            dd($data);
+            $newPost = Post::create($data);
 
             // Save the images in the storage and gets the filenames
-            list($imgHoldAfterDischarge, $imgHoldBeforeDischarge) = $this->saveTravelImages(
-                $newTravel->id,
-                [
-                    'after' => $data->file('image_hold_after_discharge'),
-                    'before' => $data->file('image_hold_before_discharge')
-                ]
-            );
+            // list($imgHoldAfterDischarge, $imgHoldBeforeDischarge) = $this->savePostImages(
+            //     $newTravel->id,
+            //     [
+            //         'after' => $data->file('image_hold_after_discharge'),
+            //         'before' => $data->file('image_hold_before_discharge')
+            //     ]
+            // );
 
             // Updates the travel with the saved filenames into the storage.
-            $newTravel->image_hold_before_discharge = $imgHoldBeforeDischarge;
-            $newTravel->image_hold_after_discharge = $imgHoldAfterDischarge;
-            $newTravel->save();
+            // $newTravel->image_hold_before_discharge = $imgHoldBeforeDischarge;
+            // $newTravel->image_hold_after_discharge = $imgHoldAfterDischarge;
+            // $newTravel->save();
             return true;
         }catch(\Exception $e){
             // Something was wrong
@@ -70,7 +71,7 @@ class PostApi
      * 
      * @return array<int, string> An array with the filename of each image stored.
      */
-    public function saveTravelImages(int $travelId, array $images){
+    public function savePostImages(int $travelId, array $images){
         $filenames = [];
         foreach($images as $key => $image){
             $fileName = sprintf( "%s.%s", Str::random(40), $image->clientExtension());

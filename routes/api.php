@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('cors')->prefix('post')->group(function () {
+Route::middleware('cors')->prefix('posts')->group(function () {
     Route::get('/' , [PostApiController::class , 'list'])->name('posts.list');
     Route::post('/' , [PostApiController::class , 'create'])->name('posts.create');
     Route::patch('/{id}' , [PostApiController::class , 'update'])->name('posts.update');
