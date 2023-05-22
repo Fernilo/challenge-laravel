@@ -42,7 +42,7 @@ class PostApiController extends Controller
     {
         $fileName = sprintf( "%s.%s", Str::random(40), $image->file('imagen')->clientExtension());
            
-        $image->file('imagen')->store("images/posts/$postId/$fileName");
+        $image->file('imagen')->storeAs($fileName ,"images/posts/$postId/");
         
         return $fileName;
     }
@@ -105,16 +105,15 @@ class PostApiController extends Controller
      * @return bool
      */
     public function update(StorePostRequest $request , int $id){
-        dd($request);
         try{
-            // $post = Post::findOrFail($id)->toArray();
-            // dd($post);
-            // $post->update($request->all());
+            
+            $post = Post::findOrFail($id);
+            $post->update($request->all());
 
-            // if($request->file('imagen')) {
-            //     $post->imagen = $this->savePostImages($post->id,$request);
-            //     $post->save();
-            // }
+            if($request->file('imagen')) {
+                $post->imagen = $this->savePostImages($post->id,$request);
+                $post->save();
+            }
 
             return response()->json(
                 ["message" => "Success! The post was updated."],

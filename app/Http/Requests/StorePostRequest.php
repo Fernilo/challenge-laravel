@@ -25,16 +25,16 @@ class StorePostRequest extends FormRequest
     {
         return [
             'titulo' => 'required',
-            // 'descripcion' => 'required'
+            'descripcion' => 'required'
         ];
     }
 
     public function messages()
     {
         return [
-            'titulo.required' => 'El :attribute es obligatorio',
-            // 'titulo.unique' => 'El :attribute ya está creado',
-            'descripcion.required' => 'La :attribute es obligatorio'
+            'titulo.required' => 'El gdfg es obligatorio',
+            // 'titulo.unique' => 'El gdfg ya está creado',
+            'descripcion.required' => 'La gdfg es obligatorio'
         ];
     }
 }
