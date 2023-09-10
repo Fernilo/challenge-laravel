@@ -8,6 +8,7 @@ use App\Exceptions\PostNotFoundException;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 
 class PostApiController extends Controller
@@ -69,6 +70,11 @@ class PostApiController extends Controller
                 ["message" => $e->getMessage()],
                 404
             );
+        }catch(ModelNotFoundException $e) {
+            return response()->json(
+                ["message" => "Sorry! We couldn't find the post you're looking for."],
+                404
+            );
         }
     }
 
@@ -89,7 +95,7 @@ class PostApiController extends Controller
                 $post,
                 200
             );
-        }catch(PostNotFoundException $e){
+        }catch(ModelNotFoundException $e){
             return response()->json(
                 ["message" => "Sorry! We couldn't find the post you're looking for."],
                 404
@@ -137,10 +143,11 @@ class PostApiController extends Controller
     {
         try{
             $posts = (($paginate === true)?Post::paginate($rowsPerPage):Post::all());
-        
-            if($posts === false){
+
+            if(!$posts->count()){
                 throw new PostNotFoundException("Sorry! There are no posts registered yet.");
             }
+
             return response()->json(
                 $posts,
                 200
