@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use App\Models\Post;
 use Livewire\Component;
-use PDO;
 use Livewire\WithPagination;
 
 class Buscador extends Component
@@ -17,7 +16,7 @@ class Buscador extends Component
 
     public function render()
     {
-        $posts = Post::where('titulo', 'LIKE' ,'%' .$this->search.'%')->latest('id')->paginate();
+        $posts = Post::where('titulo', 'LIKE' ,'%' .$this->search.'%')->latest('id')->paginate(3);
         return view('livewire.buscador',compact('posts'));
     }
 }
