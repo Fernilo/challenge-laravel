@@ -6,6 +6,8 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StorePostRequest;
+use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 
 class PostController extends Controller
 {
@@ -40,6 +42,15 @@ class PostController extends Controller
         $url = 'default.png';
         if($request->file('imagen')) {
             $url = Storage::put('public/posts',$request->file('imagen'));
+
+            $manager = new Image();
+
+            $image = $manager::make(Storage::get($url))
+                ->widen(600)
+                ->limitColors(255)
+                ->encode();
+
+            Storage::put($url, (string)$image);
         }
         $post = new Post;
 
@@ -87,7 +98,16 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         if($request->file('imagen')) {
-            $post->imagen= Storage::put('public/posts',$request->file('imagen'));
+            $post->imagen = Storage::put('public/posts',$request->file('imagen'));
+
+            $manager = new Image();
+
+            $image = $manager::make(Storage::get($post->imagen))
+                ->widen(600)
+                ->limitColors(255)
+                ->encode();
+
+            Storage::put($post->imagen, (string)$image);
         } 
 
         $post->titulo = $request->titulo;

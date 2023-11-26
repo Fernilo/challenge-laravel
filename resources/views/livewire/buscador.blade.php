@@ -10,10 +10,10 @@
                         <h5 class="card-title">{{$post->titulo}}</h5>
                         <p class="card-text">{{ $post->descripcion }}</p>
                         <a href="{{ route('post.edit',[$post->id]) }}" class="btn btn-primary">Editar</a>
-                        <a id="" class="btn btn-danger boton-eliminar">Eliminar</a>
                         <form action="/post/{{$post->id}}" id="form-{{$key}}" method="post">
                         @method('delete')
                         @csrf
+                            <button class="btn btn-danger boton-eliminar mt-3">Eliminar</button>
                             <input type="hidden" name="_method" value="DELETE">
                         </form>
                     </div>
